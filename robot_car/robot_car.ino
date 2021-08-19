@@ -1,9 +1,17 @@
+/*
+ * Author: Tyler Kosakowski
+ * 
+ * This program is an object oriented interface layer for working with the Osoyoo robot car
+ * 
+ * 
+ * 
+ */
+
+
 void setup() {
-  // put your setup code here, to run once:
 
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
 
 }
