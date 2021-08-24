@@ -10,12 +10,12 @@ Robot::~Robot() {
 
 void Robot::Setup() {
     // Configure motor control pins
-    PinMode(kMotorSpeedRight, OUTPUT);
-    PinMode(kMotorSpeedLeft, OUTPUT);
-    PinMode(kRightMotorDir1, OUTPUT);
-    PinMode(kRightMotorDir2, OUTPUT);
-    PinMode(kLeftMotorDir1, OUTPUT);
-    PinMode(kLeftMotorDir2, OUTPUT);
+    pinMode(kMotorSpeedRight, OUTPUT);
+    pinMode(kMotorSpeedLeft, OUTPUT);
+    pinMode(kRightMotorDir1, OUTPUT);
+    pinMode(kRightMotorDir2, OUTPUT);
+    pinMode(kLeftMotorDir1, OUTPUT);
+    pinMode(kLeftMotorDir2, OUTPUT);
 
     // Configure ultrasonic sensor pins
     pinMode(kUltrasonicEchoPin, OUTPUT); 
@@ -23,15 +23,18 @@ void Robot::Setup() {
     digitalWrite(kUltrasonicTriggerPin, LOW);
 
     // Configure the IR line sensor pins
-    PinMode(kIrSensor0, INPUT);
-    PinMode(kIrSensor1, INPUT);
-    PinMode(kIrSensor2, INPUT);
-    PinMode(kIrSensor3, INPUT);
-    PinMode(kIrSensor4, INPUT);
+    pinMode(kIrSensor0, INPUT);
+    pinMode(kIrSensor1, INPUT);
+    pinMode(kIrSensor2, INPUT);
+    pinMode(kIrSensor3, INPUT);
+    pinMode(kIrSensor4, INPUT);
 
     // Configure the servo for the ultrasonic sensor
     ultrasonic_servo_.attach(kServoPin);
     ultrasonic_servo_.write(90);
+
+    // Clear the data buffers for the line sensors and ultrasonic sensor
+    ClearSensorData();
 }
 
 void Robot::Drive(
@@ -146,4 +149,11 @@ void Robot::UpdateLineSensorValues() {
 
 bool * Robot::GetIrSensorValues() {
     return ir_sensor_values_;
+}
+
+void Robot::ClearSensorData() {
+    for (int i = 0; i < kDataBufferSize-1; i++) {
+        ir_sensor_values_[i] = false;
+        ultrasonic_distance_values_[i] = 0;
+    }
 }

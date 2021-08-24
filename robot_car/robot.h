@@ -27,18 +27,21 @@ enum DriveDirection {
 // Class that contains controls for all core functionality of the Osoyoo Robot car
 class Robot {
     private:
+        // Size of the IR sensor and Ultrasonic data buffers
+        static const int kDataBufferSize = 5;
+
         // Boolean Array holding the data read from the line sensors
         // read from left [0] to right [4]
         //          [0] [1] [2] [3] [4]
         // no line detected = 00000
         // line in center = 00100
         // line on left = 10000
-        bool ir_sensor_values_[5];
+        bool ir_sensor_values_[kDataBufferSize];
 
         // Integer Array holding the data read from an ultrasonic sensor sweep
         // Sweeps from left (180 deg) [0] to right (0 deg) [4]
         // Holds raw distance values for each distance reading
-        int ultrasonic_distance_values_[5];
+        int ultrasonic_distance_values_[kDataBufferSize];
 
         // ir_sensor_0 - 4 are the 5 ir line following sensors
         // these are each assigned a pin number here
@@ -69,16 +72,16 @@ class Robot {
         Servo ultrasonic_servo_;
 
         // How long to wait for the servo to reach the desired positon
-        const int kServoDelayTimeMs = 250;
+        static const int kServoDelayTimeMs = 250;
 
         // Default motor speed
-        const int kDefaultMotorSpeed = 200;
+        static const int kDefaultMotorSpeed = 200;
 
         // Ultrasonic distance conversion constant (result is in cm)
-        const double kUltrasonicDistanceConversion = 0.017;
+        static constexpr double kUltrasonicDistanceConversion = 0.017;
 
         // Ultrasonic detection distance limit (units in cm)
-        const int kUltrasonicDistanceLimit = 40;
+        static const int kUltrasonicDistanceLimit = 40;
 
     public:
         // Constructor
@@ -112,6 +115,9 @@ class Robot {
 
         // Getter for the ir line sensors array
         bool * GetIrSensorValues();
+    
+    private:
+        void ClearSensorData();
 };
 
 
