@@ -35,6 +35,18 @@ void Robot::Setup() {
 
     // Clear the data buffers for the line sensors and ultrasonic sensor
     ClearSensorData();
+
+    #ifdef ROBOT_WIFI_ENABLE
+    WiFi.init(&EspSerial);
+
+    if(Wifi.Status() == WL_NO_SHIELD) {
+        // ERROR condition
+    }
+
+    wifi_status_ = Wifi.beginAP(wifi_ssid_, 10, "", 0);l
+
+
+    #endif
 }
 
 void Robot::Drive(
@@ -157,3 +169,8 @@ void Robot::ClearSensorData() {
         ultrasonic_distance_values_[i] = 0;
     }
 }
+
+#ifdef ROBOT_WIFI_ENABLE
+
+
+#endif

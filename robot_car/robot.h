@@ -12,6 +12,16 @@
 #ifndef ROBOT_CORE_H
 #define ROBOT_CORE_H
 
+// If using the ESP wifi functionality uncomment this preprocessor macro
+// Library used can be found here: https://osoyoo.com/driver/WiFiEsp-master.zip
+#define ROBOT_WIFI_ENABLE
+
+#ifdef ROBOT_WIFI_ENABLE
+    #include <WiFiEspUdp.h>
+    #include "WiFiEsp.h"
+    #include "SoftwareSerial.h"
+#endif
+
 #include <Arduino.h>
 #include <Servo.h>
 
@@ -117,9 +127,42 @@ class Robot {
         bool * GetIrSensorValues();
     
     private:
+        // Method to clear the sensor data buffers
         void ClearSensorData();
+
+    #ifdef ROBOT_WIFI_ENABLE
+    private:
+        // UDP connection port to listen on
+        static const unsigned int kLocalPort = 8888;
+
+        // RX and TX ports for the software serial connection
+        // used for wifi connection
+        static const int kSoftwareSerialRx = 4;
+        static const int kSfotwareSerialTx = 5;
+
+        // Maximum packet size
+        static const int kMaxPacketSize = 32;
+
+        // UART buffer for the ESP Wifi Module
+        char uart_buffer_[kMaxPacketSize];
+        int uart_buffer_index_ = 0;
+
+        // Define a UDP connection
+        WiFiEspUDP Udp;
+
+        // Software serial connection for communication with the ESP wifi chip
+        SoftwareSerial EspSerial(kSoftwareSerialRx, kSfotwareSerialTx);
+
+        char ssid[] = "robot_car_wifi";
+
+        // Define a buffer to store the wifi packets
+        static const int kWifiPacketBufferSize = 5;
+        char packet_buffer_[kWifiPacketBufferSize];
+
+        int wifi_status_ = WL_IDLE_STATUS;
+        int wifi_connection_id_;
+
+    #endif
 };
-
-
 
 #endif // ROBOT_CODE_H
