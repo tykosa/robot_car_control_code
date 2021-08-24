@@ -9,7 +9,29 @@ Robot::~Robot() {
 }
 
 void Robot::Setup() {
-    return;
+    // Configure motor control pins
+    PinMode(kMotorSpeedRight, OUTPUT);
+    PinMode(kMotorSpeedLeft, OUTPUT);
+    PinMode(kRightMotorDir1, OUTPUT);
+    PinMode(kRightMotorDir2, OUTPUT);
+    PinMode(kLeftMotorDir1, OUTPUT);
+    PinMode(kLeftMotorDir2, OUTPUT);
+
+    // Configure ultrasonic sensor pins
+    pinMode(kUltrasonicEchoPin, OUTPUT); 
+    pinMode(kUltrasonicTriggerPin, INPUT);
+    digitalWrite(kUltrasonicTriggerPin, LOW);
+
+    // Configure the IR line sensor pins
+    PinMode(kIrSensor0, INPUT);
+    PinMode(kIrSensor1, INPUT);
+    PinMode(kIrSensor2, INPUT);
+    PinMode(kIrSensor3, INPUT);
+    PinMode(kIrSensor4, INPUT);
+
+    // Configure the servo for the ultrasonic sensor
+    ultrasonic_servo_.attach(kServoPin);
+    ultrasonic_servo_.write(90);
 }
 
 void Robot::Drive(
@@ -70,7 +92,6 @@ void Robot::Drive(
             delay(duration);
             break;
     }
-    return;
 }
 
 int Robot::ReadUltrasonic() {
@@ -88,12 +109,39 @@ int Robot::ReadUltrasonic() {
 
     // Convert the time to a distance using the speed of sound
     int distance = duration * kUltrasonicDistanceConversion;
-    return distance;
+    return round(distance);
+}
+
+void Robot::SweepUltrasonic() {
+    // Sets the requested positon of the servo, waits for it to
+    // reach that position and then reads the ultrasonic sensor
+    ultrasonic_servo_.write(180);
+    delay(kServoDelayTimeMs*2); // double delay length to move from 0 to 180
+    ultrasonic_distance_values_[0] = ReadUltrasonic();
+
+    ultrasonic_servo_.write(135);
+    delay(kServoDelayTimeMs);
+    ultrasonic_distance_values_[1] = ReadUltrasonic();
+
+    ultrasonic_servo_.write(90);
+    delay(kServoDelayTimeMs);
+    ultrasonic_distance_values_[2] = ReadUltrasonic();
+
+    ultrasonic_servo_.write(45);
+    delay(kServoDelayTimeMs);
+    ultrasonic_distance_values_[3] = ReadUltrasonic();
+
+    ultrasonic_servo_.write(0);
+    delay(kServoDelayTimeMs);
+    ultrasonic_distance_values_[4] = ReadUltrasonic();
 }
 
 void Robot::UpdateLineSensorValues() {
-
-    return;
+    ir_sensor_values_[0] = !digitalRead(kIrSensor0);
+    ir_sensor_values_[1] = !digitalRead(kIrSensor1);
+    ir_sensor_values_[2] = !digitalRead(kIrSensor2);
+    ir_sensor_values_[3] = !digitalRead(kIrSensor3);
+    ir_sensor_values_[4] = !digitalRead(kIrSensor4);
 }
 
 bool * Robot::GetIrSensorValues() {

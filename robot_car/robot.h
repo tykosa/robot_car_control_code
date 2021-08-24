@@ -12,8 +12,10 @@
 #ifndef ROBOT_CORE_H
 #define ROBOT_CORE_H
 
-#include "Arduino.h"
+#include <Arduino.h>
+#include <Servo.h>
 
+// Enum that contains all the possible directions the robot can drive in
 enum DriveDirection {
   kForward = 0,
   kBackward = 1,
@@ -22,10 +24,21 @@ enum DriveDirection {
   kStop = 4
 };
 
+// Class that contains controls for all core functionality of the Osoyoo Robot car
 class Robot {
     private:
         // Boolean Array holding the data read from the line sensors
+        // read from left [0] to right [4]
+        //          [0] [1] [2] [3] [4]
+        // no line detected = 00000
+        // line in center = 00100
+        // line on left = 10000
         bool ir_sensor_values_[5];
+
+        // Integer Array holding the data read from an ultrasonic sensor sweep
+        // Sweeps from left (180 deg) [0] to right (0 deg) [4]
+        // Holds raw distance values for each distance reading
+        int ultrasonic_distance_values_[5];
 
         // ir_sensor_0 - 4 are the 5 ir line following sensors
         // these are each assigned a pin number here
@@ -51,6 +64,12 @@ class Robot {
 
         // Servo control pins
         const int kServoPin = 9;
+
+        // Servo control class
+        Servo ultrasonic_servo_;
+
+        // How long to wait for the servo to reach the desired positon
+        const int kServoDelayTimeMs = 250;
 
         // Default motor speed
         const int kDefaultMotorSpeed = 200;
@@ -85,10 +104,13 @@ class Robot {
         // Reads the ultrasonic sensor and returns the distance to an obstacle
         int ReadUltrasonic();
 
+        // Sweep the ultrasonic sensor across its range and record the results
+        void SweepUltrasonic();
+
         // Reads each of the ir line sensors and stores the values
         void UpdateLineSensorValues();
 
-        // getter for the ir line sensors array
+        // Getter for the ir line sensors array
         bool * GetIrSensorValues();
 };
 
