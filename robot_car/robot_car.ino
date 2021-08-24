@@ -7,9 +7,14 @@
  * 
  */
 
+#include "robot.h"
+
+Robot robot;
+
 
 void setup() {
-
+  robot.Setup();
+  robot.drive(DRIVE_DIRECTION::FORWARD);
 }
 
 void loop() {
