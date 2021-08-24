@@ -12,6 +12,9 @@
 #ifndef ROBOT_CORE_H
 #define ROBOT_CORE_H
 
+// Uncomment this define to enable debug messages over the serial console
+#define DEBUG_MSGS
+
 #include <Arduino.h>
 #include <Servo.h>
 
@@ -82,6 +85,8 @@ class Robot {
 
         // Ultrasonic detection distance limit (units in cm)
         static const int kUltrasonicDistanceLimit = 40;
+
+        static const int kSerialBaudRate = 9600;
 
     public:
         // Constructor

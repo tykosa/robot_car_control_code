@@ -35,6 +35,11 @@ void Robot::Setup() {
 
     // Clear the data buffers for the line sensors and ultrasonic sensor
     ClearSensorData();
+
+    #ifdef DEBUG_MSGS
+    Serial.begin(kSerialBaudRate);
+    Serial.println("Initlization of Robot class complete");
+    #endif
 }
 
 void Robot::Drive(
@@ -43,6 +48,12 @@ void Robot::Drive(
         int left_motor_speed,
         int right_motor_speed) {
     switch (dir) {
+        #ifdef DEBUG_MSGS
+        Serial.println("Drive command recieved");
+        Serial.print("Duration: ");
+        Serial.println(duration);
+        #endif
+
         case kForward:
             digitalWrite(kRightMotorDir1, HIGH);
             digitalWrite(kRightMotorDir2, LOW);
@@ -98,6 +109,9 @@ void Robot::Drive(
 }
 
 int Robot::ReadUltrasonic() {
+    #ifdef DEBUG_MSGS
+    Serial.println("Reading Ultrasonic Sensor");
+    #endif
     // Reset the ultrasonic sensor
     digitalWrite(kUltrasonicTriggerPin, LOW);
     delayMicroseconds(2);
@@ -140,6 +154,9 @@ void Robot::SweepUltrasonic() {
 }
 
 void Robot::UpdateLineSensorValues() {
+    #ifdef DEBUG_MSGS
+    Serial.println("Reading Line Sensor values");
+    #endif
     ir_sensor_values_[0] = !digitalRead(kIrSensor0);
     ir_sensor_values_[1] = !digitalRead(kIrSensor1);
     ir_sensor_values_[2] = !digitalRead(kIrSensor2);
@@ -152,6 +169,10 @@ bool * Robot::GetIrSensorValues() {
 }
 
 void Robot::ClearSensorData() {
+    #ifdef DEBUG_MSGS
+    Serial.println("Clearing sensor data buffers");
+    #endif
+
     for (int i = 0; i < kDataBufferSize-1; i++) {
         ir_sensor_values_[i] = false;
         ultrasonic_distance_values_[i] = 0;
