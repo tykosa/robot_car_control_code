@@ -122,9 +122,7 @@ class Robot {
         bool * GetIrSensorValues();
     
     private:
+        // Method to clear the sensor data buffers
         void ClearSensorData();
 };
-
-
-
 #endif // ROBOT_CODE_H
