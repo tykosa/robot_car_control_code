@@ -9,9 +9,6 @@
  * the Osoyoo Robot Car v2.1
  * 
  */
-
-
-
 #ifndef ROBOT_CORE_H
 #define ROBOT_CORE_H
 

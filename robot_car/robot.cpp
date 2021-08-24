@@ -1,12 +1,9 @@
 #include "robot.h"
 
-// Constructor
 Robot::Robot() {
     return;
 }
 
-
-// Destructor
 Robot::~Robot() {
     return;
 }
@@ -77,7 +74,7 @@ void Robot::Drive(
 }
 
 int Robot::ReadUltrasonic() {
-  
+    
     return;
 }
 
