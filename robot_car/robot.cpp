@@ -74,8 +74,21 @@ void Robot::Drive(
 }
 
 int Robot::ReadUltrasonic() {
+    // Reset the ultrasonic sensor
+    digitalWrite(kUltrasonicTriggerPin, LOW);
+    delayMicroseconds(2);
     
-    return;
+    // Emit a 10us pulse from the sensor
+    digitalWrite(kUltrasonicTriggerPin, HIGH);
+    delayMicroseconds(10);
+    digitalWrite(kUltrasonicTriggerPin, LOW);
+
+    // Read in time it took for the sound wave to return to the sensor
+    int duration = pulseIn(kUltrasonicEchoPin, HIGH);
+
+    // Convert the time to a distance using the speed of sound
+    int distance = duration * kUltrasonicDistanceConversion;
+    return distance;
 }
 
 void Robot::UpdateLineSensorValues() {
